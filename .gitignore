@@ -13,3 +13,8 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+
+
+# vs 调试输出的 __debug_bin
+__debug_bin
