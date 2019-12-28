@@ -133,34 +133,160 @@ var(
 https://go-zh.org/pkg/     // 官网package
 
 打印占位符
-	%v	相应值的默认格式。在打印结构体时，“加号”标记（%+v）会添加字段名
-	%T	相应值的类型的Go语法表示
-	%q	单引号围绕的字符字面值，由Go语法安全地转义  
-		fmt.Printf("%q", "test")   // 输出："test"
+	General：
+		%v	相应值的默认格式。在打印结构体时，“加号”标记（%+v）会添加字段名
+		%T	相应值的类型的Go语法表示
+	Integer
+		%c  相应Unicode码点所表示的字符   Printf("%c", 0x4E2D)    中
+		%q	单引号围绕的字符字面值，由Go语法安全地转义 Printf("%q", 0x4E2D)        '中'
+		%b	二进制表示    Printf("%b", 5)    101
+	浮点数和复数的组成部分（实部和虚部）
+		%f	有小数点而无指数，例如 123.456        Printf("%f", 10.2)     10.200000
+		%g	根据情况选择 %e 或 %f 以产生更紧凑的（无末尾的0）输出 Printf("%g", 10.20)   10.2
+	字符串与字节切片
+		%x	十六进制，小写字母，每字节两个字符      Printf("%x", "golang")         676f6c616e67
+	指针
+		%p  十六进制表示，前缀 0x    Printf("%p", &people)    0x4f57f0
 	
 str := fmt.Sprintf("a=%d", a)
 
 len()  // 时间复杂度O(1)，字符串的长度默认是存起来的，C是要找到‘\0’
 
-浏览器敲网址到看到页面的全过程  讲师的理解
+浏览器敲网址到看到页面的全过程  讲师的理解  很细节
 
 
 
-# go day 3 ******************************************
+#############################
+go day 3
 
-fmt.Println(now.Format("2006/01/02 15:04:05"))
+fmt.Scanf("%d%d", &n, &m)    // 终端输入时默认空格分隔
 
+strings和strconv使用
+	strings.HasPrefix(s string, prefix string) bool             // 判断字符串s是否以prefix开头。
+	strings.HasSuffix(s string, suffix string) bool             // 判断字符串s是否以suffix结尾。
+	strings.Index(s string, str string) int                     // 判断str在s中首次出现的位置，如果没有出现，则返回-1
+	strings.LastIndex(s string, str string) int                 // 判断str在s中最后出现的位置，如果没有出现，则返回-1
+	strings.Replace(str string, old string, new string, n int)  // 字符串替换
+	strings.Count(str string, substr string)int                 // 字符串计数
+	strings.Repeat(str string, count int)string                 // 重复count次str
+	strings.ToLower(str string)string                           // 转为小写
+	strings.ToUpper(str string)string                           // 转为大写
+	strings.TrimSpace(str string)                               // 去掉字符串首尾空白字符
+	strings.Trim(str string, cut string)                        // 去掉字符串首尾cut字符
+		strings.Trim("abbacba", "ab") // => "c"
+	strings.TrimLeft(str string, cut string)                    // 去掉字符串首cut字符
+	strings.TrimRight(str string, cut string)                   // 去掉字符串尾cut字符
+	strings.Fields(str string)                                   // 返回str空格分隔的所有子串的slice
+	strings.Split(str string, split string)                     // 返回str被split分隔的所有子串的slice
+	strings.Join(s1 []string, sep string)                       // 用sep把s1中的所有元素链接起来
+		fmt.Println(strings.Join([]string{"a", "b", "c"}, ","))  
+		// => "a,b,c"
+	strconv.Itoa(i int)                                         // 把一个整数i转成字符串   相对于下面，不存在error
+	strconv.Atoi(str string)(int, error)                        // 把一个字符串转成整数  返回一个error 对象 
 
-函数也是一种类型
+时间和日期类型
+	time.Time类型，用来表示时间
+	获取当前时间， now := time.Now()
+	time.Now().Minute()，time.Now().Day()，time.Now().Month()，time.Now().Year()
+	time。Now().UnixNano()     // 1970年1月1日UTC以来经过的纳秒数。  
+	time.Duration用来表示纳秒 
+	const (
+		Nanosecond  Duration = 1
+		Microsecond          = 1000 * Nanosecond
+		Millisecond          = 1000 * Microsecond
+		Second               = 1000 * Millisecond
+		Minute               = 60 * Second
+		Hour                 = 60 * Minute
+	)
+	格式化：
+		now := time.Now()
+		fmt.Println(now.Format(“02/1/2006 15:04”))
+		fmt.Println(now.Format(“2006/1/02 15:04”))
+		fmt.Println(now.Format(“2006/1/02”))
 
+指针类型
 
-一个函数可以赋值给变量
+流程控制
+	如果switch没有表达式，它会匹配true。
+	Go里面switch默认相当于每个case最后带有break，匹配成功后不会自动向下执行其他case，而是跳出整个switch, 但是可以使用fallthrough强制执行后面的case代码，fallthrough不会判断下一条case的expr结果是否为true。
 
+	for i := 0; i < 5; i++ {}    // 注意没有 ()
+	
+	goto 和 label 语句
+		func main() {
+		LABEL1:
+			for i := 0; i <= 5; i++ {
+				for j := 0; j <= 5; j++ {
+					if j == 4 {
+						continue LABEL1    // 或者 goto LABEL1
+					}
+					fmt.Printf("i is: %d, and j is: %d\n", i, j)
+				}
+			}
+		}
+	
+go 中英文都是utf-8编码，英文占1个字节，中文占3个字节
 
-命名返回值的名字
+函数
+	不支持重载，一个包不能有两个名字一样的函数
 
+	函数也是一种类型一个函数可以赋值给变量
+	
+	匿名函数
+	
+	多返回值
+	
+	值传递是值的拷贝。引用传递是地址的拷贝，一般来说，地址拷贝更为高效。而值拷贝取决于拷贝的对象大小，对象越大，则性能越低。
 
-defer
+	命名返回值的名字
+		func calc(a, b int) (sum int, avg int) {
+			sum = a + b
+			avg = (a +b)/2
+			return
+		}
+
+	_标识符，用来忽略返回值
+
+	可变参数：
+		func add(arg …int) int {}  		  // 0个或多个参数
+
+		func add(a int, arg …int) int {}  // 1个或多个参数
+
+		其中arg是一个slice，我们可以通过arg[index]依次访问所有参数，通过len(arg)来判断传递参数的个数
+
+	defer
+		1. 当函数返回时，执行defer语句。因此，可以用来做资源清理
+		2. 多个defer语句，按先进后出的方式执行
+		3. defer语句中的变量，在defer声明时就决定了。
+			func a() {
+				i := 0
+				defer fmt.Println(i)    // 输出 0
+				i++
+				return
+			} 
+		用途
+			1. 关闭文件句柄
+				func read() {
+					file := open(filename)
+					defer file.Close()
+					// 文件操作
+				}
+			2. 锁资源释放
+				func read() {
+					mc.Lock()
+					defer mc.Unlock()
+					// 其他操作
+				}
+			3. 数据库连接释放
+				func read() {
+					conn := openDatabase()
+					defer conn.Close()
+					// 其他操作
+				}
+
+				
+			
+
 
 
 # go day 4 ******************************************
