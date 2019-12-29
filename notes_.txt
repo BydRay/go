@@ -382,14 +382,82 @@ Outline
         fmt.Print(f(300)) // => 321
 	} 
 
-数组与切片
+数组
+	数组：是同一种数据类型的固定长度的序列。
+	
+	长度是数组类型的一部分，因此，var a[5] int和var a[10]int是不同的类型
+
+	数组是值类型，因此改变副本的值，不会改变本身的值
+		var arr1 [5]int
+		arr2 := arr1
+		arr2[2] = 100    // arr1 不会改变
+
+	数组是定长的   切片是不定长的
+	
+	1. 数组初始化
+		a. var age0 [5]int = [5]int{1,2,3}       // 后面的默认为0
+		b. var age1 = [5]int{1,2,3,4,5}          // 自动类型推导
+		c. var age2 = [...]int{1,2,3,4,5,6}      // ... 的第三个作用：自动数有几个元素
+		d. var str = [5]string{3:”hello world”, 4:”tom”}         // 还可以指定下标初始化
+	
+	2. 多维数组
+		a. var age [5][3]int
+		b. var f [2][3]int = [...][3]int{{1, 2, 3}, {7, 8, 9}}
+
+切片
+	切片：切片是数组的一个引用，因此切片是引用类型
+	
+	切片的长度可以改变，因此，切片是一个可变的数组
+	
+	切片遍历方式和数组一样，可以用len()求长度
+	
+	cap可以求出slice最大的容量，0 <= len(slice) <= cap(array)，其中array是slice引用的数组	
+	
+	切片的定义：var 变量名 []类型，比如 var str []string  var arr []int
+
+	通过make来创建切片  也可以通过已经定义的数组来创建
+		var slice []type = make([]type, len)
+		slice  := make([]type, len)
+		slice  := make([]type, len, cap)       // 在不声明 cap 的情况下，默认 cap=len
+		
+	当对切片进行 append 操作，导致长度超出容量时，就会创建新的数组，这会导致和原有切片的分离。
+
+	拷贝
+		var a []int = []int{1, 2, 3, 4, 5, 6}
+		b := make([]int, 1)
+		copy(b, a)
+		fmt.Println(b)    //   => [1]  没有报错，拷贝不会像append 一样去扩容
+	
+	string与slice
+		string底层就是一个byte的数组，因此，也可以进行切片操作
+
+	如何改变string中的字符值？string本身是不可变的，因此要改变string中字符，需要如下操作：
+		str := “hello world 中国”
+		s := []rune(str)    //  s := []byte(str) 处理中文有问题
+		s[0] = ‘o’
+		str = string(s)
+
+数组与切片的排序    sort   package 
+	sort.Ints   sort.Strings  sort.Float64  
+
+	sort.SearchInts(a []int, b int)               //从切片a中查找b，默认返回的是从小到大排序后再查找的下标
+	sort.SearchFloats(a []float64, b float64)    
+	sort.SearchStrings(a []string, b string)      
+
+map    key-value的数据结构，又叫字典或关联数组
+	a. 声明
+		var map1 map[keytype]valuetype      //  声明是不会分配内存的，初始化需要make
+		
+		a := make(map[string]map[string]string, 100)
+		a["key1"] = make(map[string]string)       // make 只能初始化第一层，第二层不初始化下面的赋值会报错
+		a["key1"]["key2"] = "abc"
 	
 
+	
+		
+
 
 	
-
-
-
 
 
 
