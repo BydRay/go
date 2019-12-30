@@ -449,7 +449,7 @@ map    key-value的数据结构，又叫字典或关联数组
 		var map1 map[keytype]valuetype      //  声明是不会分配内存的，初始化需要make
 		
 		a := make(map[string]map[string]string, 100)
-		a["key1"] = make(map[string]string)       // make 只能初始化第一层，第二层不初始化下面的赋值会报错
+		a["key1"] = make(map[string]string)       // make 只能初始化第一层，第二层不初始化下面的赋值会panic
 		a["key1"]["key2"] = "abc"
 	
 	map相关操作
@@ -475,13 +475,45 @@ map    key-value的数据结构，又叫字典或关联数组
 		长度
 			len(a)
 
+		用map 和slice 之前一定要判断又没有初始化，没有初始化就用会panic
+
+		map排序    map 默认是无序的，原因之一：开发者认为，如果是有序的，线上的程序依赖这个排序来处理业务逻辑，假如有一天go 的代码有问题，则整个业务都崩了，解耦合，想要有序，自己再处理
+			先获取所有key，把key进行排序，然后按照排序好的key，进行遍历
+				var a map[int]int
+				a = make(map[int]int, 5)
+				var keys []int
+				for k, _ := range a {
+					keys = append(keys, k)
+				}
+				sort.Ints(keys)
+				for _, v := range keys {
+					fmt.Println(v, a[v])
+				}
+		
+		map反转
+			初始化另外一个map，把key、value互换即可
+
+package 
 	
-
+线程同步
+	import(“sync”)
+		var mu sync.Mutex     // 互斥锁, 无论是读还是写协程，同时只能有一个协程在操作
+		mu.Lock()
+		mu.Unlock()
+		
+		var mu sync.RWMutex   // 读写锁, 读锁的时候，可以有多个读的协程在操作    读多写少的情况下使用，性能高
+		mu.Lock()    // 写锁操作
+		mu.Unlock()
+		mu.RLock()   // 读锁操作
+		mu.RUnlock()
 	
+	go build -race    // 编译的时候检查是否有用锁出错的地方
 
-
-
-
+原子操作    
+	atomic.AddInt32(&count, 1)    // 使多个协程对count处理时逻辑上正确，count 加1时是串行的
+	atomic.LoadInt32(&count)
+	
+go get安装第三方包
 
 
 
