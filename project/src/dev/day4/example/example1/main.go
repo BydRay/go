@@ -18,6 +18,13 @@ func main() {
 	fmt.Println(arr2)
 
 	str := "asdf"
-	str[2] = 'a'
+	// str[2] = 'a'
 	fmt.Println(str)
+
+	m1 := make(map[string]int, 0)
+	m1 = make(map[string]int, 1)
+
+	fmt.Println(m1)
+	fmt.Println(len(m1))
+
 }
