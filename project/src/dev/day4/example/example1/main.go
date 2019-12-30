@@ -1,30 +1,40 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+	"time"
+)
+
+func initConfig() (err error) {
+	return errors.New("init config failed")
+}
+
+func test() {
+
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println(err)
+		}
+	}()
+
+	err := initConfig()
+	if err != nil {
+		panic(err)
+	}
+
+	return
+
+}
 
 func main() {
+	for {
+		test()
+		time.Sleep(time.Second)
+	}
+
 	var a []int
-	a = append(a, 2)
+	a = append(a, 10, 2, 3)
 	a = append(a, a...)
-
-	var b int
-	fmt.Printf("%T\n", b)
-
-	var arr [5]int
-	arr2 := arr
-	arr2[2] = 100 // arr1 不会改变
-
-	fmt.Println(arr)
-	fmt.Println(arr2)
-
-	str := "asdf"
-	// str[2] = 'a'
-	fmt.Println(str)
-
-	m1 := make(map[string]int, 0)
-	m1 = make(map[string]int, 1)
-
-	fmt.Println(m1)
-	fmt.Println(len(m1))
-
+	fmt.Print(a)
 }
