@@ -517,22 +517,90 @@ go get安装第三方包
 
 
 
+############################
+go day 5
 
+Outline
+	1. 结构体和方法
+	2. 接口
+	3. 课后作业
 
+Go中的struct
+	1. 用来自定义复杂数据结构
+	2. struct里面可以包含多个字段（属性）
+	3. struct类型可以定义方法，注意和函数的区分
+	4. struct类型是值类型
+	5. struct类型可以嵌套
+	6. Go语言没有class类型，只有struct类型    // 和其他语言的重要区别
 
+	声明
+		type 标识符 struct {
+			   field1 type
+			   field2 type
+		}
 
+	struct 中字段访问：和其他语言一样，使用.
 
+	struct定义的三种形式：
+		var stu Student
+		var stu *Student = new (Student)
+		var stu *Student = &Student{}
 
+	访问形式   
+		stu.Name         // stu 是指针类型也行，go 会自动转成(*stu).Name
+		(*stu).Name
 
+	struct的内存布局：struct中的所有字段在内存是连续的
+		type Student struct {
+			Name  string
+			Age   int
+			score float32
+		}
+		
+		stu.Name = "hua"
+		stu.Age = 18
+		stu.score = 80
 
+		fmt.Printf("Name:%p\n", &stu.Name)
+		fmt.Printf("Age: %p\n", &stu.Age)
+		fmt.Printf("score:%p\n", &stu.score)
+			
+		=>  
+		Name:0xc000004480
+		Age: 0xc000004490           // “hua” 占用 10 字节？ 
+		score:0xc000004498          // int 占用 8 字节     利用“struct中的所有字段在内存是连续的”来计算int占用的字节数
 
+	链表定义
+		type Student struct {
+			   Name string
+			   Next* Student
+		}
 
+	双链表定义
+		type Student struct {
+			   Name string
+			   Next* Student
+			   Prev* Student
+		}
 
+	二叉树定义
+		type Student struct {
+			   Name string
+			   left* Student
+			   right* Student
+		}
 
+	别名
+		type Student struct {
+			Number int
+		}
+		type Stu Student   
+		var a Student, b stu    
+		a = b    //  不能赋值，虽然有相同的字段，但是属于不同的类型
+		
+	golang中的struct没有构造函数，一般可以使用工厂模式来解决这个问题     ？工厂模式
 
-
-
-
+	make 用来创建map、slice、channel    new用来创建值类型
 
 
 
