@@ -23,6 +23,7 @@ func insertHead(p *Student) {
 
 	stu.next = p
 	fmt.Printf("p = %p   p.next = %p\n", p, p.next)
+	fmt.Printf(" = %p   p.next = %p\n", , p.next)
 	*p = stu
 	fmt.Printf("(*p).Name = %s  (*p).next =  %p  (*p).next.next = %p\n", (*p).Name, (*p).next, (*p).next.next)
 
