@@ -603,6 +603,11 @@ Go中的struct
     make 用来创建map、slice、channel    new用来创建值类型
 
     我们可以为struct中的每个字段，写上一个tag。这个tag可以通过反射的机制获取到，最常用的场景就是json序列化和反序列化     ？后面讲
+        type Student struct {
+            Name  string `json:"student_name"`
+            Age   int    `json:"age"`
+            Score int    `json:"score"`
+        }
 
     
     匿名字段    结构体中字段可以没有名字
@@ -679,6 +684,113 @@ Go中的struct
     
 
 
+############################
+go day 6
+
+go 里面的结构体可以认为是其他语言的类
+
+Outline
+    1. 接口
+    2. 反射
+
+为什么要用接口
+    忽略低层实现，比如当前的的模块的数据是用mysql存，当变成用oreacal后，接口不变，依然不影响模块之间的调用
+    
+所有的类型都可以给空接口赋值，用一个变量来存任何类型的数据的时候，可以用一个空接口的变量
+    type Test interface {
+    }
+    
+    var a interface{}
+    var b int 
+    a = b
+    
+    变量slice和接口slice之间赋值操作，用for range
+        var a []int
+        var b []interface{}
+        b = a   // 报错  用for range才行  ？
+
+
+
+任何类型，只要实现了接口的所有方法，也就是实现了这个接口，然后就能调用Sort()来排序。  用接口，让函数的可扩展性很好
+    func Sort(data Interface)
+
+    type Interface interface {
+        // Len方法返回集合中的元素个数
+        Len() int
+        // Less方法报告索引i的元素是否比索引j的元素小
+        Less(i, j int) bool
+        // Swap方法交换索引i和j的两个元素
+        Swap(i, j int)
+    }
+
+类型断言
+    由于接口是一般类型，不知道具体类型，如果要转成具体类型可以采用以下方法进行转换：
+        var t int
+        var x interface{}
+        x = t
+        y = x.(int)       // 转成int
+        y, ok = x.(int)   // 转成int，带检查
+
+写一个函数判断传入参数的类型
+    func classifier(items ...interface{}) {
+          for i, x := range items { 
+                  switch x.(type) {     // type 是关键字
+                   case bool:       fmt.Printf(“param #%d is a bool\n”, i)
+                   case float64:    fmt.Printf(“param #%d is a float64\n”, i)
+                   case int, int64: fmt.Printf(“param #%d is an int\n”, i)
+                   case nil: fmt.Printf(“param #%d is nil\n”, i)
+                   case string: fmt.Printf(“param #%d is a string\n”, i)
+                   default: fmt.Printf(“param #%d’s type is unknown\n”, i)
+            }
+    }
+
+判断一个变量是否实现了指定的接口
+    var f *File
+	var b interface{}
+	b = f
+	v, ok := b.(ReadWriter)    // ReadWriter是一个接口类型
+	fmt.Println(v, ok)
+
+反射：可以在运行时动态获取变量的相关信息
+    import (“reflect”)
+
+    两个函数
+        a. reflect.TypeOf，获取变量的类型，返回reflect.Type类型
+        
+        b. reflect.ValueOf，获取变量的值，返回reflect.Value类型
+            reflect.Value.Kind，获取变量的类别，返回一个常量   如：reflect.Struct
+        
+            reflect.Value.Interface()，转换成interface{}类型
+            
+            获取变量的值
+                reflect.ValueOf(x).Float() 
+                reflect.ValueOf(x).Int()
+                reflect.ValueOf(x).String()
+                reflect.ValueOf(x).Bool()
+
+            通过反射的来改变变量的值
+                reflect.Value.SetFloat()，设置浮点数
+                reflect.Value.SetInt()，设置整数
+                reflect.Value.SetString()，设置字符串
+
+            当reflect.Value类型的reflect.Value.Kind是Ptr的时候
+                var a float64
+                fv := reflect.ValueOf(a)    
+                fv.SetFloat(3.3)      // panic 因为传入reflect.ValueOf()的a是一个值类型，在副本中设置值不起作用，go就直接panic了，要传指针进去
+              
+                func (v Value) Elem() Value  // Elem返回v持有的接口保管的值的Value封装，或者v持有的指针指向的值的Value封装。如果v的Kind不是Interface或Ptr会panic；如果v持有的值为nil，会返回Value零值。
+                    	val := reflect.ValueOf(b)    // var b interface{}
+                        val.Elem().SetInt(100)
+             
+            用反射操作结构体
+                reflect.Value.NumField()获取结构体中字段的个数
+                reflect.Value.Method(n).Call来调用结构体中的方 法
+
+                
+    变量 --实现接口的所有方法-> interface -- reflect.ValueOf -> reflect.Type类型
+    变量 <-断言-- interface <- reflect.Value.Interface -- reflect.Type类型
+    
+只有结构体或者接口才有方法
 
 
 
@@ -691,6 +803,32 @@ Go中的struct
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+ 
 
 
 
