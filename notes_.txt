@@ -755,7 +755,7 @@ Outline
     import (“reflect”)
 
     两个函数
-        a. reflect.TypeOf，获取变量的类型，返回reflect.Type类型
+        a. reflect.TypeOf()，获取变量的类型，返回reflect.Type类型     // 和reflect.Value.Kind返回的有区别
         
         b. reflect.ValueOf，获取变量的值，返回reflect.Value类型
             reflect.Value.Kind，获取变量的类别，返回一个常量   如：reflect.Struct
@@ -794,6 +794,8 @@ Outline
 
 
 
+############################
+go day 7
 
 
 
