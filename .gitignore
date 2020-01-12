@@ -22,3 +22,7 @@ __debug_bin
 
 # 忽略文件夹
 /project_old/*
+
+
+# 单元测试输出的
+debug.test
