@@ -24,5 +24,9 @@ __debug_bin
 /project_old/*
 
 
-# 单元测试输出的
+# 忽略单元测试输出的
 debug.test
+
+
+# 忽略编译包文件（无main包）生成的 *.a 文件
+*.a
